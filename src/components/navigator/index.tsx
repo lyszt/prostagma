@@ -1,6 +1,7 @@
 import { type FC } from "react";
 // A sort of fractal sort of structure happens inside here...
-import Home from "./content/home";
+import Home from "../../content/home";
+import "./Navigator.css";
 
 const Navigator: FC = () => {
   return (

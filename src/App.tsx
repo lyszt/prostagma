@@ -1,5 +1,5 @@
 import { type FC } from "react";
-import Navigator from "./Navigator";
+import Navigator from "./components/navigator/";
 
 const App: FC = () => {
   return (

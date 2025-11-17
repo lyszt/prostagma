@@ -1,0 +1,8 @@
+/* HOVER ATTRIBUTES */
+
+button:hover * {
+    color: crimson !important;
+}
+button:hover svg {
+    fill: crimson !important;
+}
