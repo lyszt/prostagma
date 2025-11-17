@@ -23,6 +23,7 @@
     "@eslint/js": "^9.39.1",
     "@fontsource/roboto": "^5.2.8",
     "@mui/icons-material": "^7.3.5",
+    "@mui/x-data-grid": "^8.18.0",
     "@types/node": "^24.10.0",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
