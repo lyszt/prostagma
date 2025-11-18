@@ -10,7 +10,6 @@ defmodule ProstagmaServer.Application do
     children = [
       ProstagmaServerWeb.Telemetry,
       ProstagmaServer.Repo,
-      ProstagmaServer.Projects,
       {DNSCluster, query: Application.get_env(:prostagma_server, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: ProstagmaServer.PubSub},
       # Start a worker by calling: ProstagmaServer.Worker.start_link(arg)

@@ -23,7 +23,8 @@ defmodule ProstagmaServerWeb.Router do
   scope "/api", ProstagmaServerWeb do
     pipe_through(:api)
 
-    get("/projects", ProjectController, :index)
+    get("/projects", ProjectController, :list)
+    post("/projects", ProjectController, :add)
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
