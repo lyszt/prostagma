@@ -15,6 +15,7 @@ interface ProjectFormProps {
 }
 
 const ProjectForm: FC<ProjectFormProps> = ({ projectManager }) => {
+    console.log("hewwo");
     return <form className="">
             <div className="w-full h-10"><h2>Add project</h2></div>
     </form>
