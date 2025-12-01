@@ -1,6 +1,6 @@
-defmodule ProstagmaServer do
+defmodule IrisServer do
   @moduledoc """
-  ProstagmaServer keeps the contexts that define your domain
+  IrisServer keeps the contexts that define your domain
   and business logic.
 
   Contexts are also responsible for managing your data, regardless

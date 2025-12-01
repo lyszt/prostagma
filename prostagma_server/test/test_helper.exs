@@ -1,2 +1,2 @@
 ExUnit.start()
-Ecto.Adapters.SQL.Sandbox.mode(ProstagmaServer.Repo, :manual)
+Ecto.Adapters.SQL.Sandbox.mode(IrisServer.Repo, :manual)

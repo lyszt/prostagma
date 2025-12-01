@@ -1,4 +1,4 @@
-defmodule ProstagmaServerWeb.Gettext do
+defmodule IrisServerWeb.Gettext do
   @moduledoc """
   A module providing Internationalization with a gettext-based API.
 
@@ -6,7 +6,7 @@ defmodule ProstagmaServerWeb.Gettext do
   that you can use in your application. To use this Gettext backend module,
   call `use Gettext` and pass it as an option:
 
-      use Gettext, backend: ProstagmaServerWeb.Gettext
+      use Gettext, backend: IrisServerWeb.Gettext
 
       # Simple translation
       gettext("Here is the string to translate")
@@ -21,5 +21,5 @@ defmodule ProstagmaServerWeb.Gettext do
 
   See the [Gettext Docs](https://hexdocs.pm/gettext) for detailed usage.
   """
-  use Gettext.Backend, otp_app: :prostagma_server
+  use Gettext.Backend, otp_app: :iris_server
 end

@@ -1,4 +1,4 @@
-defmodule ProstagmaServerWeb.Endpoint do
+defmodule IrisServerWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :prostagma_server
 
   # The session will be stored in the cookie and signed,
@@ -24,7 +24,7 @@ defmodule ProstagmaServerWeb.Endpoint do
     at: "/",
     from: :prostagma_server,
     gzip: not code_reloading?,
-    only: ProstagmaServerWeb.static_paths()
+    only: IrisServerWeb.static_paths()
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
@@ -42,6 +42,15 @@ defmodule ProstagmaServerWeb.Endpoint do
   plug Plug.RequestId
   plug Plug.Telemetry, event_prefix: [:phoenix, :endpoint]
 
+  # CORS must come BEFORE Plug.Parsers to ensure headers are always set
+  plug CORSPlug,
+    origin: ["http://localhost:5173", "http://localhost:3000", "http://localhost:5174"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    headers: ["content-type", "accept", "authorization", "x-requested-with"],
+    expose: ["content-type", "authorization"],
+    max_age: 86400,
+    credentials: true
+
   plug Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
     pass: ["*/*"],
@@ -50,6 +59,5 @@ defmodule ProstagmaServerWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
-  plug CORSPlug, origin: ["http://localhost:5173", "http://localhost:3000"]
-  plug ProstagmaServerWeb.Router
+  plug IrisServerWeb.Router
 end

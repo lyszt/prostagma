@@ -1,6 +1,6 @@
 import { type FC } from "react";
 import { useState, useEffect } from "react";
-import Network from "../../lib/Network.ts";
+import Network, { type NetworkResponse } from "../../lib/Network.ts";
 import type { Project } from "../../types";
 import { type GridColDef } from "@mui/x-data-grid";
 import Datagrid from "../../components/datagrid";
@@ -13,16 +13,21 @@ const Home: FC = () => {
   const baseUrl = API_URL;
   const [projects, setProjects] = useState<Project[]>([]);
   const [projectsLength, setProjectsLength] = useState(0);
+  const [projectRefresh, setProjectRefresh] = useState(0);
 
   const projectManager = new Network(baseUrl);
 
- useEffect(() => {
-    (async() => {
-      const allProjects = await projectManager.get("/projects") as unknown as Project[];
-      setProjects(allProjects);
-      setProjectsLength(allProjects.length);
+  useEffect(() => {
+    (async () => {
+      const res: NetworkResponse<{ data: Project[] }> = await projectManager.get<{ data: Project[] }>("/projects");
+      if (res.ok && res.body?.data) {
+        setProjects(res.body.data);
+        setProjectsLength(res.body.data.length);
+      } else {
+        console.error("Failed to fetch projects: status", res.status, res.body);
+      }
     })();
-  }, []);
+  }, [projectRefresh]);
   
 
 
@@ -33,7 +38,15 @@ const Home: FC = () => {
     { field: "name", headerName: "Project Name", width: 200, minWidth: 150, flex: 1 },
     { field: "description", headerName: "Project Description", width: 300, minWidth: 200, flex: 2 },
     { field: "status", headerName: "Project Status", width: 120, minWidth: 100 },
-    { field: "stack", headerName: "Stack", width: 150, minWidth: 120 }
+    {
+      field: "stacks",
+      headerName: "Stacks",
+      width: 200,
+      minWidth: 150,
+      valueGetter: (_value, row) => {
+        return row.stacks?.map((stack: any) => stack.name).join(", ") || "";
+      }
+    }
   ];
 
 
@@ -68,7 +81,7 @@ const Home: FC = () => {
 
     {/*  DATAGRID + PROJECT ELEMENTS*/}
 
-    <AddProject projectManager={projectManager}/>
+    <AddProject projectManager={projectManager} projectRefresh={projectRefresh} setProjectRefresh={setProjectRefresh} />
       <Datagrid
         rows={projects}
         columns={projectColumns}

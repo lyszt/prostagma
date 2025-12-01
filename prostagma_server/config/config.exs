@@ -7,19 +7,19 @@
 # General application configuration
 import Config
 
-config :prostagma_server,
-  ecto_repos: [ProstagmaServer.Repo],
+config :iris_server,
+  ecto_repos: [IrisServer.Repo],
   generators: [timestamp_type: :utc_datetime]
 
 # Configures the endpoint
-config :prostagma_server, ProstagmaServerWeb.Endpoint,
+config :iris_server, IrisServerWeb.Endpoint,
   url: [host: "localhost"],
   adapter: Bandit.PhoenixAdapter,
   render_errors: [
-    formats: [html: ProstagmaServerWeb.ErrorHTML, json: ProstagmaServerWeb.ErrorJSON],
+    formats: [html: IrisServerWeb.ErrorHTML, json: IrisServerWeb.ErrorJSON],
     layout: false
   ],
-  pubsub_server: ProstagmaServer.PubSub,
+  pubsub_server: IrisServer.PubSub,
   live_view: [signing_salt: "OJ9eP+Nr"]
 
 # Configures the mailer
@@ -29,12 +29,12 @@ config :prostagma_server, ProstagmaServerWeb.Endpoint,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :prostagma_server, ProstagmaServer.Mailer, adapter: Swoosh.Adapters.Local
+config :iris_server, IrisServer.Mailer, adapter: Swoosh.Adapters.Local
 
 # Configure esbuild (the version is required)
 config :esbuild,
   version: "0.25.4",
-  prostagma_server: [
+  iris_server: [
     args:
       ~w(js/app.js --bundle --target=es2022 --outdir=../priv/static/assets/js --external:/fonts/* --external:/images/* --alias:@=.),
     cd: Path.expand("../assets", __DIR__),
@@ -44,7 +44,7 @@ config :esbuild,
 # Configure tailwind (the version is required)
 config :tailwind,
   version: "4.1.7",
-  prostagma_server: [
+  iris_server: [
     args: ~w(
       --input=assets/css/app.css
       --output=priv/static/assets/css/app.css

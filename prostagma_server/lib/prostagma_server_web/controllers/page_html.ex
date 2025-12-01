@@ -1,10 +1,10 @@
-defmodule ProstagmaServerWeb.PageHTML do
+defmodule IrisServerWeb.PageHTML do
   @moduledoc """
   This module contains pages rendered by PageController.
 
   See the `page_html` directory for all templates available.
   """
-  use ProstagmaServerWeb, :html
+  use IrisServerWeb, :html
 
   embed_templates "page_html/*"
 end

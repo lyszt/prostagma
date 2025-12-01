@@ -1,11 +1,11 @@
 import Config
 
 # Configure your database
-config :prostagma_server, ProstagmaServer.Repo,
+config :iris_server, IrisServer.Repo,
   username: "postgres",
   password: "postgres",
   hostname: "localhost",
-  database: "prostagma_server_dev",
+  database: "iris_server_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
@@ -16,7 +16,7 @@ config :prostagma_server, ProstagmaServer.Repo,
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we can use it
 # to bundle .js and .css sources.
-config :prostagma_server, ProstagmaServerWeb.Endpoint,
+config :iris_server, IrisServerWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
   http: [ip: {127, 0, 0, 1}, port: String.to_integer(System.get_env("PORT") || "4000")],
@@ -25,8 +25,8 @@ config :prostagma_server, ProstagmaServerWeb.Endpoint,
   debug_errors: true,
   secret_key_base: "SvVqEcecFP9GNjdDuwQr3Ud4W3Xqu7a4j4SLKfobKQV9onf40nV0O/Ansv2DPIdS",
   watchers: [
-    esbuild: {Esbuild, :install_and_run, [:prostagma_server, ~w(--sourcemap=inline --watch)]},
-    tailwind: {Tailwind, :install_and_run, [:prostagma_server, ~w(--watch)]}
+    esbuild: {Esbuild, :install_and_run, [:iris_server, ~w(--sourcemap=inline --watch)]},
+    tailwind: {Tailwind, :install_and_run, [:iris_server, ~w(--watch)]}
   ]
 
 # ## SSL Support
@@ -53,18 +53,18 @@ config :prostagma_server, ProstagmaServerWeb.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :prostagma_server, ProstagmaServerWeb.Endpoint,
+config :iris_server, IrisServerWeb.Endpoint,
   live_reload: [
     web_console_logger: true,
     patterns: [
       ~r"priv/static/(?!uploads/).*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/prostagma_server_web/(?:controllers|live|components|router)/?.*\.(ex|heex)$"
+      ~r"lib/iris_server_web/(?:controllers|live|components|router)/?.*\.(ex|heex)$"
     ]
   ]
 
 # Enable dev routes for dashboard and mailbox
-config :prostagma_server, dev_routes: true
+config :iris_server, dev_routes: true
 
 # Do not include metadata nor timestamps in development logs
 config :logger, :default_formatter, format: "[$level] $message\n"

@@ -1,12 +1,12 @@
-defmodule ProstagmaServerWeb.ProjectController do
-  use ProstagmaServerWeb, :controller
-  alias ProstagmaServer.Projects
+defmodule IrisServerWeb.ProjectController do
+  use IrisServerWeb, :controller
+  alias IrisServer.Projects
 
   # GET /api/projects
   def list(conn, _params) do
     # Meant to list all created projects, whether it be running or not
     projects = Projects.list_projects()
-    json(conn, %{status: 200, projects: projects})
+    render(conn, :index, projects: projects)
   end
 
   # POST /api/projects
@@ -16,14 +16,14 @@ defmodule ProstagmaServerWeb.ProjectController do
       {:ok, project} ->
         conn
         |> put_status(:created)
-        |> json(%{status: 201, project: project})
+        |> render(:show, project: project)
 
       {:error, changeset} ->
         errors = Ecto.Changeset.traverse_errors(changeset, fn {msg, _opts} -> msg end)
 
         conn
         |> put_status(:bad_request)
-        |> json(%{error: "Invalid parameters.", details: errors})
+        |> json(%{errors: errors})
     end
   end
 end

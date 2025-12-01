@@ -1,12 +1,12 @@
-defmodule ProstagmaServerWeb do
+defmodule IrisServerWeb do
   @moduledoc """
   The entrypoint for defining your web interface, such
   as controllers, components, channels, and so on.
 
   This can be used in your application as:
 
-      use ProstagmaServerWeb, :controller
-      use ProstagmaServerWeb, :html
+      use IrisServerWeb, :controller
+      use IrisServerWeb, :html
 
   The definitions below will be executed for every controller,
   component, etc, so keep them short and clean, focused
@@ -40,7 +40,7 @@ defmodule ProstagmaServerWeb do
     quote do
       use Phoenix.Controller, formats: [:html, :json]
 
-      use Gettext, backend: ProstagmaServerWeb.Gettext
+      use Gettext, backend: IrisServerWeb.Gettext
 
       import Plug.Conn
 
@@ -80,16 +80,16 @@ defmodule ProstagmaServerWeb do
   defp html_helpers do
     quote do
       # Translation
-      use Gettext, backend: ProstagmaServerWeb.Gettext
+      use Gettext, backend: IrisServerWeb.Gettext
 
       # HTML escaping functionality
       import Phoenix.HTML
       # Core UI components
-      import ProstagmaServerWeb.CoreComponents
+      import IrisServerWeb.CoreComponents
 
       # Common modules used in templates
       alias Phoenix.LiveView.JS
-      alias ProstagmaServerWeb.Layouts
+      alias IrisServerWeb.Layouts
 
       # Routes generation with the ~p sigil
       unquote(verified_routes())
@@ -99,9 +99,9 @@ defmodule ProstagmaServerWeb do
   def verified_routes do
     quote do
       use Phoenix.VerifiedRoutes,
-        endpoint: ProstagmaServerWeb.Endpoint,
-        router: ProstagmaServerWeb.Router,
-        statics: ProstagmaServerWeb.static_paths()
+        endpoint: IrisServerWeb.Endpoint,
+        router: IrisServerWeb.Router,
+        statics: IrisServerWeb.static_paths()
     end
   end
 

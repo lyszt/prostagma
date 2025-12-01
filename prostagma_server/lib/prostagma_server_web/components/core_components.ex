@@ -1,4 +1,4 @@
-defmodule ProstagmaServerWeb.CoreComponents do
+defmodule IrisServerWeb.CoreComponents do
   @moduledoc """
   Provides core UI components.
 
@@ -27,7 +27,7 @@ defmodule ProstagmaServerWeb.CoreComponents do
 
   """
   use Phoenix.Component
-  use Gettext, backend: ProstagmaServerWeb.Gettext
+  use Gettext, backend: IrisServerWeb.Gettext
 
   alias Phoenix.LiveView.JS
 
@@ -457,9 +457,9 @@ defmodule ProstagmaServerWeb.CoreComponents do
     # with our gettext backend as first argument. Translations are
     # available in the errors.po file (as we use the "errors" domain).
     if count = opts[:count] do
-      Gettext.dngettext(ProstagmaServerWeb.Gettext, "errors", msg, msg, count, opts)
+      Gettext.dngettext(IrisServerWeb.Gettext, "errors", msg, msg, count, opts)
     else
-      Gettext.dgettext(ProstagmaServerWeb.Gettext, "errors", msg, opts)
+      Gettext.dgettext(IrisServerWeb.Gettext, "errors", msg, opts)
     end
   end
 

@@ -1,5 +1,5 @@
-defmodule ProstagmaServer.Repo do
+defmodule IrisServer.Repo do
   use Ecto.Repo,
-    otp_app: :prostagma_server,
+    otp_app: :iris_server,
     adapter: Ecto.Adapters.Postgres
 end

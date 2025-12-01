@@ -1,4 +1,4 @@
-defmodule ProstagmaServer.DataCase do
+defmodule IrisServer.DataCase do
   @moduledoc """
   This module defines the setup for tests requiring
   access to the application's data layer.
@@ -18,17 +18,17 @@ defmodule ProstagmaServer.DataCase do
 
   using do
     quote do
-      alias ProstagmaServer.Repo
+      alias IrisServer.Repo
 
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
-      import ProstagmaServer.DataCase
+      import IrisServer.DataCase
     end
   end
 
   setup tags do
-    ProstagmaServer.DataCase.setup_sandbox(tags)
+    IrisServer.DataCase.setup_sandbox(tags)
     :ok
   end
 
@@ -36,7 +36,7 @@ defmodule ProstagmaServer.DataCase do
   Sets up the sandbox based on the test tags.
   """
   def setup_sandbox(tags) do
-    pid = Ecto.Adapters.SQL.Sandbox.start_owner!(ProstagmaServer.Repo, shared: not tags[:async])
+    pid = Ecto.Adapters.SQL.Sandbox.start_owner!(IrisServer.Repo, shared: not tags[:async])
     on_exit(fn -> Ecto.Adapters.SQL.Sandbox.stop_owner(pid) end)
   end
 

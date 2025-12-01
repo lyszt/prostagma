@@ -1,11 +1,11 @@
-defmodule ProstagmaServerWeb.Router do
-  use ProstagmaServerWeb, :router
+defmodule IrisServerWeb.Router do
+  use IrisServerWeb, :router
 
   pipeline :browser do
     plug(:accepts, ["html"])
     plug(:fetch_session)
     plug(:fetch_live_flash)
-    plug(:put_root_layout, html: {ProstagmaServerWeb.Layouts, :root})
+    plug(:put_root_layout, html: {IrisServerWeb.Layouts, :root})
     plug(:protect_from_forgery)
     plug(:put_secure_browser_headers)
   end
@@ -14,13 +14,13 @@ defmodule ProstagmaServerWeb.Router do
     plug(:accepts, ["json"])
   end
 
-  scope "/", ProstagmaServerWeb do
+  scope "/", IrisServerWeb do
     pipe_through(:browser)
 
     get("/", PageController, :home)
   end
 
-  scope "/api", ProstagmaServerWeb do
+  scope "/api", IrisServerWeb do
     pipe_through(:api)
 
     get("/projects", ProjectController, :list)
@@ -39,7 +39,7 @@ defmodule ProstagmaServerWeb.Router do
     scope "/dev" do
       pipe_through(:browser)
 
-      live_dashboard("/dashboard", metrics: ProstagmaServerWeb.Telemetry)
+        live_dashboard("/dashboard", metrics: IrisServerWeb.Telemetry)
       forward("/mailbox", Plug.Swoosh.MailboxPreview)
     end
   end

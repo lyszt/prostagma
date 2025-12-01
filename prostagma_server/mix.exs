@@ -1,9 +1,9 @@
-defmodule ProstagmaServer.MixProject do
+defmodule IrisServer.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :prostagma_server,
+      app: :iris_server,
       version: "0.1.0",
       elixir: "~> 1.15",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -20,7 +20,7 @@ defmodule ProstagmaServer.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {ProstagmaServer.Application, []},
+      mod: {IrisServer.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end
@@ -83,10 +83,10 @@ defmodule ProstagmaServer.MixProject do
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
-      "assets.build": ["compile", "tailwind prostagma_server", "esbuild prostagma_server"],
+      "assets.build": ["compile", "tailwind iris_server", "esbuild iris_server"],
       "assets.deploy": [
-        "tailwind prostagma_server --minify",
-        "esbuild prostagma_server --minify",
+        "tailwind iris_server --minify",
+        "esbuild iris_server --minify",
         "phx.digest"
       ],
       precommit: ["compile --warning-as-errors", "deps.unlock --unused", "format", "test"]

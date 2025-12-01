@@ -1,4 +1,4 @@
-defmodule ProstagmaServer.Application do
+defmodule IrisServer.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
@@ -8,19 +8,19 @@ defmodule ProstagmaServer.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      ProstagmaServerWeb.Telemetry,
-      ProstagmaServer.Repo,
-      {DNSCluster, query: Application.get_env(:prostagma_server, :dns_cluster_query) || :ignore},
-      {Phoenix.PubSub, name: ProstagmaServer.PubSub},
-      # Start a worker by calling: ProstagmaServer.Worker.start_link(arg)
-      # {ProstagmaServer.Worker, arg},
+      IrisServerWeb.Telemetry,
+      IrisServer.Repo,
+      {DNSCluster, query: Application.get_env(:iris_server, :dns_cluster_query) || :ignore},
+      {Phoenix.PubSub, name: IrisServer.PubSub},
+      # Start a worker by calling: IrisServer.Worker.start_link(arg)
+      # {IrisServer.Worker, arg},
       # Start to serve requests, typically the last entry
-      ProstagmaServerWeb.Endpoint
+      IrisServerWeb.Endpoint
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: ProstagmaServer.Supervisor]
+    opts = [strategy: :one_for_one, name: IrisServer.Supervisor]
     Supervisor.start_link(children, opts)
   end
 
@@ -28,7 +28,7 @@ defmodule ProstagmaServer.Application do
   # whenever the application is updated.
   @impl true
   def config_change(changed, _new, removed) do
-    ProstagmaServerWeb.Endpoint.config_change(changed, removed)
+    IrisServerWeb.Endpoint.config_change(changed, removed)
     :ok
   end
 end

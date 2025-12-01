@@ -1,4 +1,4 @@
-defmodule ProstagmaServerWeb.Telemetry do
+defmodule IrisServerWeb.Telemetry do
   use Supervisor
   import Telemetry.Metrics
 
@@ -87,7 +87,7 @@ defmodule ProstagmaServerWeb.Telemetry do
     [
       # A module, function and arguments to be invoked periodically.
       # This function must call :telemetry.execute/3 and a metric must be added above.
-      # {ProstagmaServerWeb, :count_users, []}
+      # {IrisServerWeb, :count_users, []}
     ]
   end
 end

@@ -31,7 +31,7 @@ const Navigator: FC = () => {
               <path d="M14 10l2 2l-2 2"></path>
             </svg>
           </label>
-          <div className="px-4">Prostagma</div>
+          <div className="px-4">Iris</div>
         </nav>
         {/* Page content here */}
         <div className="p-4">
