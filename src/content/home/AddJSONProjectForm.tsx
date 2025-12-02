@@ -103,8 +103,8 @@ const AddJSONProjectForm: FC<AddJSONProjectFormProps> = ({ onCancel, onSubmit, p
                 }
             } else {
                 // Handle single project
-                const status = await addProject(projectManager, parsed);
-                if (status >= 200 && status < 300) {
+                const response = await addProject(projectManager, parsed);
+                if (response.status >= 200 && response.status < 300) {
                     if (setProjectRefresh) setProjectRefresh((prev) => prev + 1);
                     setBulkResult({
                         totalProjects: 1,
@@ -114,7 +114,15 @@ const AddJSONProjectForm: FC<AddJSONProjectFormProps> = ({ onCancel, onSubmit, p
                     });
                     setTimeout(() => onSubmit?.(), 1500);
                 } else {
-                    setError(`Failed to submit project. Status: ${status}`);
+                    // Format validation errors for single project
+                    let errorMessage = `Failed to submit project. Status: ${response.status}`;
+                    if (response.error?.errors) {
+                        const errors = Object.entries(response.error.errors)
+                            .map(([field, messages]: [string, any]) => `${field}: ${Array.isArray(messages) ? messages.join(', ') : messages}`)
+                            .join('; ');
+                        errorMessage = errors;
+                    }
+                    setError(errorMessage);
                 }
             }
         } catch (err) {
@@ -161,7 +169,7 @@ const AddJSONProjectForm: FC<AddJSONProjectFormProps> = ({ onCancel, onSubmit, p
 
             {bulkResult && (
                 <Alert
-                    severity={bulkResult.failureCount === 0 ? "success" : "warning"}
+                    severity={bulkResult.failureCount === 0 ? "success" : "error"}
                     icon={bulkResult.failureCount === 0 ? <CheckCircleOutlineIcon /> : <ErrorOutlineIcon />}
                 >
                     <Typography variant="body2" fontWeight="bold">
@@ -169,16 +177,21 @@ const AddJSONProjectForm: FC<AddJSONProjectFormProps> = ({ onCancel, onSubmit, p
                     </Typography>
                     {bulkResult.failureCount > 0 && (
                         <Box sx={{ mt: 1 }}>
-                            <Typography variant="body2" color="error">
-                                {bulkResult.failureCount} project(s) failed:
+                            <Typography variant="body2" fontWeight="bold" color="error.main" sx={{ mb: 0.5 }}>
+                                {bulkResult.failureCount} project(s) failed with validation errors:
                             </Typography>
-                            <ul style={{ margin: '4px 0', paddingLeft: '20px' }}>
+                            <Box component="ul" sx={{ margin: '4px 0', paddingLeft: '20px', '& li': { marginBottom: '8px' } }}>
                                 {bulkResult.failures.map((failure, idx) => (
-                                    <li key={idx} style={{ fontSize: '0.875rem' }}>
-                                        <strong>{failure.projectName}</strong>: {failure.error}
+                                    <li key={idx}>
+                                        <Typography variant="body2" component="span" fontWeight="bold" color="error.dark">
+                                            {failure.projectName || `Project #${failure.index + 1}`}
+                                        </Typography>
+                                        <Typography variant="body2" component="span" color="error.main" sx={{ ml: 0.5 }}>
+                                            - {failure.error}
+                                        </Typography>
                                     </li>
                                 ))}
-                            </ul>
+                            </Box>
                         </Box>
                     )}
                 </Alert>
@@ -223,7 +236,7 @@ const AddJSONProjectForm: FC<AddJSONProjectFormProps> = ({ onCancel, onSubmit, p
                     startIcon={<LibraryAddCheckOutlinedIcon />}
                     type="button"
                     onClick={copyToClipboard}
-                    variant="outlined"
+                    variant="text"
                     color="secondary"
                     size="large"
                     aria-label="Copy JSON template to clipboard"

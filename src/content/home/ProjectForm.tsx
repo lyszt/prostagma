@@ -12,6 +12,7 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
+import Alert from '@mui/material/Alert';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import * as languages from "linguist-languages";
@@ -81,6 +82,9 @@ const ProjectForm: FC<ProjectFormProps> = ({ onCancel, onSubmit, projectManager,
     const [tagInput, setTagInput] = useState("");
     const [notes, setNotes] = useState("");
 
+    // Error handling
+    const [error, setError] = useState<string | null>(null);
+
     const handleAddTag = () => {
         if (tagInput.trim() && !tags.includes(tagInput.trim())) {
             setTags([...tags, tagInput.trim()]);
@@ -94,6 +98,7 @@ const ProjectForm: FC<ProjectFormProps> = ({ onCancel, onSubmit, projectManager,
 
     async function prepareProject(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
+        setError(null);
 
         const projectData: ProjectInput = {
             name: projectName,
@@ -119,12 +124,21 @@ const ProjectForm: FC<ProjectFormProps> = ({ onCancel, onSubmit, projectManager,
             notes: notes || undefined,
         };
 
-        const status = await addProject(projectManager, projectData);
-        if (status >= 200 && status < 300) {
+        const response = await addProject(projectManager, projectData);
+        if (response.status >= 200 && response.status < 300) {
             if (setProjectRefresh) setProjectRefresh((prev) => prev + 1);
             onSubmit?.();
         } else {
-            console.warn("Failure submitting the project form. Status:", status);
+            // Format validation errors
+            let errorMessage = `Failed to submit project. Status: ${response.status}`;
+            if (response.error?.errors) {
+                const errors = Object.entries(response.error.errors)
+                    .map(([field, messages]: [string, any]) => `${field}: ${Array.isArray(messages) ? messages.join(', ') : messages}`)
+                    .join('; ');
+                errorMessage = errors;
+            }
+            setError(errorMessage);
+            console.warn("Failure submitting the project form:", errorMessage);
         }
     }
 
@@ -148,6 +162,12 @@ const ProjectForm: FC<ProjectFormProps> = ({ onCancel, onSubmit, projectManager,
         </div>
 
         <Box className={`flex flex-col gap-3 overflow-y-auto flex-1 ${isExpanded ? 'p-8 max-w-7xl mx-auto w-full' : 'p-6'}`}>
+            {error && (
+                <Alert severity="error" onClose={() => setError(null)}>
+                    {error}
+                </Alert>
+            )}
+
             {/* Minimal View - Always Visible */}
             <TextField
                 required
@@ -207,7 +227,7 @@ const ProjectForm: FC<ProjectFormProps> = ({ onCancel, onSubmit, projectManager,
             {/* More Options Toggle */}
             <Button
                 onClick={handleToggleExpand}
-                variant="outlined"
+                variant="text"
                 color="secondary"
                 endIcon={isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                 fullWidth

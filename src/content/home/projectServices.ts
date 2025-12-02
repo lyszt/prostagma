@@ -14,29 +14,33 @@ export interface BulkImportResult {
     projectName: string;
     error: string;
     status: number;
+    details?: any;
   }>;
 }
 
 /**
  * Create a project and return the status code.
- * Returns the HTTP status code of the response.
+ * Returns the HTTP status code of the response, and the error response if failed.
  */
 async function addProject(
   projectManager: Network,
   projectData: ProjectInput,
-): Promise<number> {
+): Promise<{ status: number; error?: any }> {
+  console.log("addProject called with data:", JSON.stringify(projectData, null, 2));
   try {
     const response: NetworkResponse<ProjectResponse> = await projectManager.post<ProjectResponse>(
       "projects",
       projectData,
     );
-    return response.status;
+    console.log("addProject response:", response.status, response.body);
+    return { status: response.status };
   } catch (error) {
     if (error instanceof NetworkError) {
-      return error.status;
+      console.error("NetworkError in addProject:", error.status, error.response);
+      return { status: error.status, error: error.response };
     }
     console.error("Unexpected error in addProject:", error);
-    return 0;
+    return { status: 0, error: String(error) };
   }
 }
 
@@ -48,6 +52,8 @@ async function addProjectsBulk(
   projectManager: Network,
   projects: ProjectInput[],
 ): Promise<BulkImportResult> {
+  console.log(`Starting bulk import of ${projects.length} projects`);
+
   const result: BulkImportResult = {
     totalProjects: projects.length,
     successCount: 0,
@@ -56,30 +62,57 @@ async function addProjectsBulk(
   };
 
   // Create array of promises for parallel execution
-  const promises = projects.map((project, index) =>
-    addProject(projectManager, project)
-      .then(status => ({ index, project, status, success: status >= 200 && status < 300 }))
-      .catch(() => ({ index, project, status: 0, success: false }))
-  );
+  const promises = projects.map((project, index) => {
+    console.log(`Queueing project ${index + 1}:`, project.name);
+    return addProject(projectManager, project)
+      .then(response => {
+        console.log(`Project ${project.name} completed with status ${response.status}`);
+        return {
+          index,
+          project,
+          status: response.status,
+          success: response.status >= 200 && response.status < 300,
+          errorDetails: response.error
+        };
+      })
+      .catch((error) => {
+        console.error(`Project ${project.name} failed:`, error);
+        return { index, project, status: 0, success: false, errorDetails: String(error) };
+      });
+  });
 
   // Wait for all requests to complete
+  console.log(`Sending ${promises.length} parallel requests`);
   const results = await Promise.all(promises);
+  console.log('All requests completed');
 
   // Process results
-  results.forEach(({ index, project, status, success }) => {
+  results.forEach(({ index, project, status, success, errorDetails }) => {
     if (success) {
       result.successCount++;
     } else {
       result.failureCount++;
+
+      // Format error message from backend validation errors
+      let errorMessage = `Failed with status ${status}`;
+      if (errorDetails?.errors) {
+        const errors = Object.entries(errorDetails.errors)
+          .map(([field, messages]: [string, any]) => `${field}: ${Array.isArray(messages) ? messages.join(', ') : messages}`)
+          .join('; ');
+        errorMessage = errors;
+      }
+
       result.failures.push({
         index,
         projectName: project.name || `Project ${index + 1}`,
-        error: `Failed with status ${status}`,
+        error: errorMessage,
         status,
+        details: errorDetails,
       });
     }
   });
 
+  console.log(`Bulk import complete: ${result.successCount} succeeded, ${result.failureCount} failed`);
   return result;
 }
 
