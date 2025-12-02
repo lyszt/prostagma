@@ -53,23 +53,23 @@ defmodule IrisServerWeb.Telemetry do
       ),
 
       # Database Metrics
-      summary("prostagma_server.repo.query.total_time",
+      summary("iris_server.repo.query.total_time",
         unit: {:native, :millisecond},
         description: "The sum of the other measurements"
       ),
-      summary("prostagma_server.repo.query.decode_time",
+      summary("iris_server.repo.query.decode_time",
         unit: {:native, :millisecond},
         description: "The time spent decoding the data received from the database"
       ),
-      summary("prostagma_server.repo.query.query_time",
+      summary("iris_server.repo.query.query_time",
         unit: {:native, :millisecond},
         description: "The time spent executing the query"
       ),
-      summary("prostagma_server.repo.query.queue_time",
+      summary("iris_server.repo.query.queue_time",
         unit: {:native, :millisecond},
         description: "The time spent waiting for a database connection"
       ),
-      summary("prostagma_server.repo.query.idle_time",
+      summary("iris_server.repo.query.idle_time",
         unit: {:native, :millisecond},
         description:
           "The time the connection spent waiting before being checked out for the query"

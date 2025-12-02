@@ -5,7 +5,7 @@ import type { Project } from "../../types";
 import { type GridColDef } from "@mui/x-data-grid";
 import Datagrid from "../../components/datagrid";
 import { API_URL } from "../../config";
-import AddProject from "./AddProject.tsx";
+import AddProject from "./AddProject";
 
 
 

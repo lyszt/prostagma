@@ -52,8 +52,6 @@ export interface Project {
   updated_at?: string | null;
 }
 
-export type ProjectInput = Omit<Project, "id" | "inserted_at" | "updated_at" | "stacks"> & {
-  stack_ids?: number[];
-};
+export type ProjectInput = Omit<Project, "id" | "inserted_at" | "updated_at" | "stacks">;
 
 export type ProjectFormData = Partial<ProjectInput>;

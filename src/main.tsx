@@ -94,7 +94,6 @@ const theme: Theme = createTheme({
 // Expose a CSS variable for global use in inline SVGs and CSS
 document.documentElement.style.setProperty("--iris-primary", primaryMain);
 document.documentElement.style.setProperty("--iris-secondary", secondaryMain);
-document.documentElement.style.setProperty("--iris-primary-dark", darken(primaryMain, hoverDarken));
 
 createRoot(container).render(
   <StrictMode>
