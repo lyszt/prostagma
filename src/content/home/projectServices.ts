@@ -41,7 +41,7 @@ async function addProject(
 }
 
 /**
- * Add multiple projects in bulk.
+ * Add multiple projects in bulk using parallel requests.
  * Returns a result object with success/failure counts and details.
  */
 async function addProjectsBulk(
@@ -55,22 +55,30 @@ async function addProjectsBulk(
     failures: [],
   };
 
-  for (let i = 0; i < projects.length; i++) {
-    const project = projects[i];
-    const status = await addProject(projectManager, project);
+  // Create array of promises for parallel execution
+  const promises = projects.map((project, index) =>
+    addProject(projectManager, project)
+      .then(status => ({ index, project, status, success: status >= 200 && status < 300 }))
+      .catch(() => ({ index, project, status: 0, success: false }))
+  );
 
-    if (status >= 200 && status < 300) {
+  // Wait for all requests to complete
+  const results = await Promise.all(promises);
+
+  // Process results
+  results.forEach(({ index, project, status, success }) => {
+    if (success) {
       result.successCount++;
     } else {
       result.failureCount++;
       result.failures.push({
-        index: i,
-        projectName: project.name || `Project ${i + 1}`,
+        index,
+        projectName: project.name || `Project ${index + 1}`,
         error: `Failed with status ${status}`,
         status,
       });
     }
-  }
+  });
 
   return result;
 }
